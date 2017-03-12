@@ -13,39 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hello;
+package tutorials.tut1;
 
 import org.springframework.amqp.core.Queue;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import tut1.Tut1Receiver;
-import tut1.Tut1Sender;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * @author Gary Russell
  * @author Scott Deeg
- *
  */
-@Profile({"tut1","hello-world"})
-@Configuration
-public class Tut1Config {
+public class Tut1Sender {
 
-    @Bean
-    public Queue hello() {
-        return new Queue("tut.hello");
-    }
+    @Autowired
+    private RabbitTemplate template;
 
-    @Profile("receiver")
-    @Bean
-    public Tut1Receiver receiver() {
-        return new Tut1Receiver();
-    }
+    @Autowired
+    private Queue queue;
 
-    @Profile("sender")
-    @Bean
-    public Tut1Sender sender() {
-        return new Tut1Sender();
+    @Scheduled(fixedDelay = 1000, initialDelay = 500)
+    public void send() {
+        String message = "Hello World!";
+        this.template.convertAndSend(queue.getName(), message);
+        System.out.println(" [x] Sent '" + message + "'");
     }
 
 }
+

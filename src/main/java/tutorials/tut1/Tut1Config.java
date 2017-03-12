@@ -13,31 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hello;
+package tutorials.tut1;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.amqp.core.Queue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * @author Gary Russell
  * @author Scott Deeg
+ *
  */
-public class RabbitMQTutorialsRunner implements CommandLineRunner {
+@Profile({"tut1","hello-world"})
+@Configuration
+public class Tut1Config {
 
-    @Value("${tutorial.client.duration:0}")
-    private int duration;
+    @Bean
+    public Queue hello() {
+        return new Queue("tut.hello");
+    }
 
-    @Autowired
-    private ConfigurableApplicationContext ctx;
+    @Profile("receiver")
+    @Bean
+    public Tut1Receiver receiver() {
+        return new Tut1Receiver();
+    }
 
-    @Override
-    public void run(String... arg0) throws Exception {
-        System.out.println("Ready ... running for " + duration + "ms");
-        Thread.sleep(duration);
-        ctx.close();
+    @Profile("sender")
+    @Bean
+    public Tut1Sender sender() {
+        return new Tut1Sender();
     }
 
 }
-

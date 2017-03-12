@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hello;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,7 +26,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @author Scott Deeg
  *
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"tutorials"})
 @EnableScheduling
 public class RabbitMQTutorialsApplication {
 
@@ -39,7 +38,7 @@ public class RabbitMQTutorialsApplication {
             @Override
             public void run(String... arg0) throws Exception {
                 System.out.println("This app uses Spring Profiles to control its behavior.\n");
-                System.out.println("Sample usage: java -jar rabbit-tutorials.jar --spring.profiles.active=tut1,sender");
+                System.out.println("Sample usage: java -jar rabbit-tutorials.jar --spring.profiles.active=tutorials.tut1,sender");
             }
 
         };
